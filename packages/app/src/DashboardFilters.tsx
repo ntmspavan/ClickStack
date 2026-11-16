@@ -243,8 +243,8 @@ const DashboardFilters = ({
         const isLoadingValues = queriedFilterValues
           ? queriedFilterValues.isLoading
           : isFetching;
-        // Only a queried dropdown has a values query that can await a
-        // variable's selection.
+        // Only queried and SQL query dropdowns have a values query that can
+        // await a variable's selection.
         const pendingVariables = isQueryExpressionFilter(filter)
           ? getPendingFilterValuesVariables(filter, variables)
           : isSqlQueryFilter(filter)
