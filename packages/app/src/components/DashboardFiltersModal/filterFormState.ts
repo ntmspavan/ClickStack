@@ -12,6 +12,7 @@ import {
   DashboardFilterSchema,
   PromqlLabelDashboardFilter,
   QueryExpressionDashboardFilter,
+  SqlQueryDashboardFilter,
   StaticListDashboardFilter,
 } from '@hyperdx/common-utils/dist/types';
 import { isFilterSingleSelect } from '@hyperdx/common-utils/dist/variables';
@@ -53,7 +54,8 @@ export type FilterFormValues = {
     | 'isGlobalRequirement'
     | 'maxSelections'
   > &
-  Pick<AdhocDashboardFilter, 'sourceType' | 'sources'>;
+  Pick<AdhocDashboardFilter, 'sourceType' | 'sources'> &
+  Pick<SqlQueryDashboardFilter, 'connection' | 'sqlTemplate'>;
 
 export type FilterFormControl = Control<FilterFormValues>;
 
@@ -65,6 +67,7 @@ export const toFormValues = (
   const staticList = filter?.type === 'STATIC_LIST' ? filter : undefined;
   const promqlLabel = filter?.type === 'PROMETHEUS_LABEL' ? filter : undefined;
   const adhoc = filter?.type === 'ADHOC' ? filter : undefined;
+  const sqlQuery = filter?.type === 'SQL_QUERY' ? filter : undefined;
 
   return {
     id: filter?.id ?? crypto.randomUUID(),
@@ -100,6 +103,10 @@ export const toFormValues = (
     // ADHOC fields
     sourceType: adhoc?.sourceType ?? 'sql',
     sources: adhoc?.sources ?? [],
+
+    // SQL_QUERY fields
+    connection: sqlQuery?.connection ?? '',
+    sqlTemplate: sqlQuery?.sqlTemplate ?? '',
   };
 };
 
@@ -133,6 +140,17 @@ export const toSavedFilter = (values: FilterFormValues): DashboardFilter => {
       ...rest,
       label: values.label.trim(),
       match: values.match?.trim() || undefined,
+      isBroadcastEnabled: false,
+      isVariableEnabled: true,
+      variableName: getFilterVariableName(values),
+      ...selectionLimits,
+    });
+  }
+
+  if (values.type === 'SQL_QUERY') {
+    return DashboardFilterSchema.parse({
+      ...rest,
+      sqlTemplate: values.sqlTemplate.trim(),
       isBroadcastEnabled: false,
       isVariableEnabled: true,
       variableName: getFilterVariableName(values),

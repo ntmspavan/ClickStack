@@ -40,6 +40,7 @@ import {
 } from './filterFormState';
 import { PromqlLabelFilterEditForm } from './PromqlLabelFilterEditForm';
 import { QueryExpressionFilterEditForm } from './QueryExpressionFilterEditForm';
+import { SqlQueryFilterEditForm } from './SqlQueryFilterEditForm';
 import { StaticListFilterEditForm } from './StaticListFilterEditForm';
 
 const FILTER_TYPE_OPTIONS = [
@@ -48,6 +49,7 @@ const FILTER_TYPE_OPTIONS = [
     label: 'Queried values',
   },
   { value: DashboardFilterType.enum.STATIC_LIST, label: 'Static values' },
+  { value: DashboardFilterType.enum.SQL_QUERY, label: 'SQL query values' },
   ...(IS_PROMQL_ENABLED
     ? [
         {
@@ -79,6 +81,8 @@ interface DashboardFilterEditFormProps {
   showRequiredFilterOptions: boolean;
   /** The dashboard's current variable state, if any */
   variables?: ChartVariable[];
+  /** The dashboard's date range, which filter previews run over */
+  dateRange?: [Date, Date];
   onSave: (filter: DashboardFilter) => void;
   onClose: () => void;
   onCancel: () => void;
@@ -97,6 +101,7 @@ export const DashboardFilterEditForm = ({
   showVariableOptions,
   showRequiredFilterOptions,
   variables,
+  dateRange,
   onSave,
   onClose,
   onCancel,
@@ -247,6 +252,14 @@ export const DashboardFilterEditForm = ({
                   control={control}
                   setValue={setValue}
                   otherFilters={otherFilters}
+                />
+              </SqlVariablesProvider>
+            ) : formFilterType === 'SQL_QUERY' ? (
+              <SqlVariablesProvider variables={otherVariables}>
+                <SqlQueryFilterEditForm
+                  control={control}
+                  otherFilters={otherFilters}
+                  dateRange={dateRange}
                 />
               </SqlVariablesProvider>
             ) : formFilterType === 'PROMETHEUS_LABEL' ? (

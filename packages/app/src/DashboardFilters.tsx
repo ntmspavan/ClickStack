@@ -9,6 +9,7 @@ import {
   isFilterRequired,
   isFilterVariableEnabled,
   isQueryExpressionFilter,
+  isSqlQueryFilter,
   isStaticListFilter,
 } from '@hyperdx/common-utils/dist/filters';
 import {
@@ -141,8 +142,9 @@ const DashboardFilterSelect = ({
           // so a completed/empty/failed query stays interactive and the user can
           // still clear or adjust the selection.
           loading={isLoading}
-          // A static list renders in the order its author wrote it.
-          sort={!isStaticListFilter(filter)}
+          // A static list renders in the order its author wrote it, and a SQL
+          // query filter in the order its query returns.
+          sort={!isStaticListFilter(filter) && !isSqlQueryFilter(filter)}
           isMultiSelect={!isFilterSingleSelect(filter)}
           onChange={onChange}
           data-testid={`dashboard-filter-select-${filter.name}`}
@@ -245,7 +247,12 @@ const DashboardFilters = ({
         // variable's selection.
         const pendingVariables = isQueryExpressionFilter(filter)
           ? getPendingFilterValuesVariables(filter, variables)
-          : undefined;
+          : isSqlQueryFilter(filter)
+            ? getPendingFilterValuesVariables(
+                { where: filter.sqlTemplate, whereLanguage: 'sql' },
+                variables,
+              )
+            : undefined;
         return (
           <DashboardFilterSelect
             key={filter.id}
