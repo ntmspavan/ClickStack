@@ -6,6 +6,44 @@ PR — keep the `hyperdx-release-notes` comment marker intact when editing so yo
 edits survive regeneration. Per-package detail lives in each
 `packages/*/CHANGELOG.md`.
 
+## v2.46.0 — 2026-11-16
+
+<!-- hyperdx-release-notes version=2.46.0 inputs=c64848441066 -->
+
+**Row key expressions and named MCP installs**
+
+Log and trace sources can now carry an optional "Row key expression", so the
+side panel looks a row up using exactly the columns you nominate instead of
+guessing keys from table metadata — useful when your table's primary key is not
+what the metadata suggests. The CLI's `hdx mcp install` also learned
+`--name <server-name>`, so a second ClickStack instance can sit alongside the
+first rather than overwriting it.
+
+### ✨ New Features
+
+- **Row key expression on log and trace sources**: set an optional row key
+  expression on a source and the side panel's row lookup selects and filters on
+  only those columns, instead of detecting keys from table metadata. Leave it
+  empty and nothing changes — detection behaves exactly as it does today.
+- **Keep several ClickStack MCP servers side by side**: `hdx mcp install
+  --name <server-name>` adds the MCP server under a name you choose, so
+  installing a second ClickStack instance no longer overwrites the first. When
+  your key belongs to more than one team, the installer asks which teams to add
+  a server for and adds one entry per team, and when it finds more than one
+  agent it asks which to set up.
+
+<!-- hyperdx-package-list -->
+
+### 📦 Package changelogs
+
+- `@hyperdx/api` 2.45.0 → 2.46.0 — [changelog](https://github.com/ClickHouse/ClickStack/blob/main/packages/api/CHANGELOG.md#2460)
+- `@hyperdx/app` 2.45.0 → 2.46.0 — [changelog](https://github.com/ClickHouse/ClickStack/blob/main/packages/app/CHANGELOG.md#2460)
+- `@hyperdx/cli` 0.9.0 → 0.9.1 — [changelog](https://github.com/ClickHouse/ClickStack/blob/main/packages/cli/CHANGELOG.md#091)
+- `@hyperdx/common-utils` 0.35.0 → 0.36.0 — [changelog](https://github.com/ClickHouse/ClickStack/blob/main/packages/common-utils/CHANGELOG.md#0360)
+- `@hyperdx/otel-collector` 2.45.0 → 2.46.0 — [changelog](https://github.com/ClickHouse/ClickStack/blob/main/packages/otel-collector/CHANGELOG.md#2460)
+
+<!-- /hyperdx-package-list -->
+
 ## v2.45.0 — 2026-11-13
 
 <!-- hyperdx-release-notes version=2.45.0 inputs=8861d0a1698f -->
