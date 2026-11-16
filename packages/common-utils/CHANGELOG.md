@@ -1,5 +1,13 @@
 # @hyperdx/common-utils
 
+## 0.36.0
+
+### Minor Changes
+
+- 743c3c1a6: feat: add an optional "Row key expression" to log and trace sources. When set,
+  the side panel's row lookup selects and filters on only those columns instead of
+  detecting keys from table metadata.
+
 ## 0.35.0
 
 ### Minor Changes
